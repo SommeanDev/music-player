@@ -37,7 +37,6 @@ public class PageTwoController implements Initializable {
             Scanner scanner = new Scanner(is);
 
             while (scanner.hasNextLine()){
-
                 String line = scanner.nextLine();
                 stringbuilder.append(line);
                 songList.add(line);
@@ -46,6 +45,8 @@ public class PageTwoController implements Initializable {
             String out = stringbuilder.toString();
 
             for (String song : songList) {
+                System.out.println(song);
+
                 if (songList.indexOf(song) >= 7 || songList.indexOf(song) == 5) {
 
                     String pattern = "^([-a]+)\\s+(\\d{2}-\\d{2}-\\d{4})\\s+(\\d{2}:\\d{2})\\s+(\\d+)\\s+(.*)$";
@@ -67,7 +68,6 @@ public class PageTwoController implements Initializable {
                         System.out.println("Name: " + name);
                     }
                 }
-
             }
 
             System.out.println("\nLine count: " + lineCount);
@@ -98,20 +98,34 @@ public class PageTwoController implements Initializable {
             }
         }
 
-        listView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                int selectedIndex = listView.getSelectionModel().getSelectedIndex();
-                if (selectedIndex >= 0) {
-                    String selectedSong = songList.get(selectedIndex);
-                    playSong(selectedSong);
+//        for (String listItem : listView.getItems().stream().toList()) {
+//            String[] listItemContents = listItem.split("\t");
+//            System.out.println(listItemContents[1]);
+//        }
+
+        listView.setOnMouseClicked(event -> {
+            int selectedIndex = listView.getSelectionModel().getSelectedIndex();
+            if (selectedIndex >= 0) {
+                String selectedSong = songList.get(selectedIndex+8);
+                if (songList.indexOf(selectedSong) >= 7 || songList.indexOf(selectedSong) == 5) {
+
+                    String pattern = "^([-a]+)\\s+(\\d{2}-\\d{2}-\\d{4})\\s+(\\d{2}:\\d{2})\\s+(\\d+)\\s+(.*)$";
+
+                    Pattern r = Pattern.compile(pattern);
+                    Matcher m = r.matcher(selectedSong);
+
+                    if (m.find()) {
+                        String selectedSongName = m.group(5);
+                        System.out.println(selectedSongName);
+                        playSong(selectedSongName);
+                    }
                 }
             }
         });
     }
     private void playSong(String songFile) {
         try {
-            File file = new File(songFile);
+            File file = new File("C:\\Users\\HP\\music\\" + songFile);
             if (file.exists()) {
                 Desktop.getDesktop().open(file);
             } else {
