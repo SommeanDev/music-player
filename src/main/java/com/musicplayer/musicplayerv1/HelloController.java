@@ -17,7 +17,7 @@ public class HelloController {
             Parent root = loader.load();
             PageTwoController pageTwoController = loader.getController();
             // Create a new scene and set it on the stage
-            Scene newScene = new Scene(root, 800, 450);
+            Scene newScene = new Scene(root, 1100, 600);
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(newScene);
         } catch (Exception e) {

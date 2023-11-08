@@ -7,15 +7,15 @@
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
 
-<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="450.0" prefWidth="800.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.musicplayer.musicplayerv1.HelloController">
+<AnchorPane minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.musicplayer.musicplayerv1.HelloController">
    <children>
-      <Button layoutX="331.0" layoutY="343.0" mnemonicParsing="false" onAction="#onStartButtonClick" text="START">
+      <Button layoutX="481.0" layoutY="472.0" mnemonicParsing="false" onAction="#onStartButtonClick" text="START">
          <font>
             <Font name="System Bold" size="31.0" />
          </font>
       </Button>
-      <Circle fill="#21ffde" layoutX="400.0" layoutY="187.0" radius="100.0" stroke="WHITE" strokeType="INSIDE" />
-      <Polygon fill="WHITE" layoutX="410.0" layoutY="197.0" rotate="90.0" stroke="WHITE" strokeType="INSIDE">
+      <Circle fill="#21ffde" layoutX="550.0" layoutY="300.0" radius="100.0" stroke="WHITE" strokeType="INSIDE" />
+      <Polygon fill="WHITE" layoutX="566.0" layoutY="310.0" rotate="90.0" stroke="WHITE" strokeType="INSIDE">
         <points>
           <Double fx:value="-50.0" />
           <Double fx:value="40.0" />
@@ -29,6 +29,5 @@
          </rotationAxis>
       </Polygon>
       <Accordion layoutX="129.0" layoutY="99.0" />
-      <TabPane layoutX="150.0" layoutY="150.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" />
    </children>
 </AnchorPane>
