@@ -6,12 +6,19 @@ import javafx.scene.control.ListView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
+
+
 import java.io.File;
+import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
 import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javafx.event.EventHandler;
+import javafx.scene.input.MouseEvent;
+import java.awt.Desktop;
 
 public class PageTwoController implements Initializable {
     @FXML
@@ -19,8 +26,9 @@ public class PageTwoController implements Initializable {
     public ArrayList<String> songList = new ArrayList<>();
 
     protected void findMusicMP3(){
-        String command = "dir music/*.mp3";
-        ProcessBuilder processBuilder = new ProcessBuilder("powershell.exe", "-Command", command);
+        String command = "ls music/*.mp3";
+        StringBuilder stringbuilder = new StringBuilder();
+        ProcessBuilder processBuilder = new ProcessBuilder("powershell.exe", "-Command", command).directory(new File("C:\\Users\\HP"));
         try{
             int lineCount = 0;
             Process process = processBuilder.start();
@@ -29,15 +37,17 @@ public class PageTwoController implements Initializable {
             Scanner scanner = new Scanner(is);
 
             while (scanner.hasNextLine()){
+
                 String line = scanner.nextLine();
+                stringbuilder.append(line);
                 songList.add(line);
                 lineCount++;
             }
+            String out = stringbuilder.toString();
 
             for (String song : songList) {
                 if (songList.indexOf(song) >= 7 || songList.indexOf(song) == 5) {
-//                    System.out.println(song);
-//                    System.out.println(Arrays.toString(song.split(" ")));
+
                     String pattern = "^([-a]+)\\s+(\\d{2}-\\d{2}-\\d{4})\\s+(\\d{2}:\\d{2})\\s+(\\d+)\\s+(.*)$";
 
                     Pattern r = Pattern.compile(pattern);
@@ -87,5 +97,33 @@ public class PageTwoController implements Initializable {
                 }
             }
         }
+
+        listView.setOnMouseClicked(new EventHandler<MouseEvent>() {
+            @Override
+            public void handle(MouseEvent event) {
+                int selectedIndex = listView.getSelectionModel().getSelectedIndex();
+                if (selectedIndex >= 0) {
+                    String selectedSong = songList.get(selectedIndex);
+                    playSong(selectedSong);
+                }
+            }
+        });
     }
+    private void playSong(String songFile) {
+        try {
+            File file = new File(songFile);
+            if (file.exists()) {
+                Desktop.getDesktop().open(file);
+            } else {
+                System.err.println("File does not exist: " + songFile);
+            }
+        } catch (IOException e) {
+            System.err.println("Error while opening the file: " + e.getMessage());
+            e.printStackTrace();
+        } catch (SecurityException e) {
+            System.err.println("Security exception: " + e.getMessage());
+            e.printStackTrace();
+        }
+    }
+
 }

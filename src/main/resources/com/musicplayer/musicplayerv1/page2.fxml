@@ -1,17 +1,38 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
 
-<AnchorPane prefHeight="400.0" prefWidth="600.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.musicplayer.musicplayerv1.PageTwoController">
-   <children>
-      <TabPane prefHeight="400.0" prefWidth="600.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-        <tabs>
-          <Tab text="Songs">
-              <ListView fx:id="listView" />
-          </Tab>
-          <Tab text="Music Player" />
-        </tabs>
-      </TabPane>
-   </children>
+<AnchorPane prefHeight="600.0" prefWidth="1100.0" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.musicplayer.musicplayerv1.PageTwoController">
+    <style>
+        .background {
+        -fx-background-color: black;
+        }
+
+        .tab-pane {
+        -fx-background-color: blue;
+        }
+
+        .tab {
+        -fx-text-fill: #3498db; /* Set the text color for the Tab */
+        }
+
+        .list-view {
+        -fx-background-color: #f1c40f; /* Set the background color for the ListView */
+        }
+    </style>
+
+    <children>
+        <TabPane prefHeight="600.0" prefWidth="1100.0" styleClass="tab-pane" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <tabs>
+                <Tab styleClass="tab" text="Songs">
+                    <ListView fx:id="listView" styleClass="list-view">
+
+                    </ListView>
+                </Tab>
+                <Tab styleClass="tab" text="Music Player" />
+            </tabs>
+        </TabPane>
+    </children>
 </AnchorPane>
