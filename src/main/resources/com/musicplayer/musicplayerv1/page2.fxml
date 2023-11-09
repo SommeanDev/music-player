@@ -7,24 +7,6 @@
 <?import javafx.scene.text.*?>
 
 <AnchorPane fx:id="AnchorPane" prefHeight="600.0" prefWidth="1100.0" stylesheets="@page-two-style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.musicplayer.musicplayerv1.PageTwoController">
-    <style>
-        .background {
-        -fx-background-color: black;
-        }
-
-        .tab-pane {
-        -fx-background-color: blue;
-        }
-
-        .tab {
-        -fx-text-fill: #3498db; /* Set the text color for the Tab */
-        }
-
-        .list-view {
-        -fx-background-color: #f1c40f; /* Set the background color for the ListView */
-        }
-    </style>
-
     <children>
         <TabPane prefHeight="600.0" prefWidth="1100.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
             <Tab styleClass="tab" text="Songs">
@@ -32,7 +14,7 @@
 
                 </ListView>
             </Tab>
-            <Tab styleClass="tab" text="Music Player">
+            <Tab text="Music Player">
                 <VBox fx:id="MediaPlayer" alignment="CENTER" spacing="30.0">
                     <ImageView />
                     <Label fx:id="songTitle" alignment="CENTER" prefHeight="58.0" prefWidth="757.0" text="Song Title" wrapText="true">

@@ -96,7 +96,7 @@ public class PageTwoController implements Initializable {
 //        listView.getItems().addAll("song1", "song2", "song3", "song4");
         int listIndex = 1;
         for (String song : songList) {
-            if (songList.indexOf(song) >= 7 || songList.indexOf(song) == 5) {
+            if (songList.indexOf(song) >= 7 && !song.equals(songList.get(1))) {
                 String pattern = "^([-a]+)\\s+(\\d{2}-\\d{2}-\\d{4})\\s+(\\d{2}:\\d{2})\\s+(\\d+)\\s+(.*)$";
 
                 Pattern r = Pattern.compile(pattern);

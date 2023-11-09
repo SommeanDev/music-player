@@ -14,6 +14,26 @@
     -fx-background-color: #ffef53;
 }
 
-.tab .list-view .list-cell{
-    -fx-background-color: black;
+#listView {
+    -fx-background-color: #333333;
+}
+
+.list-view .list-cell{
+    -fx-text-fill: white;
+    -fx-padding: 25;
+}
+
+.list-view .list-cell:odd {
+    -fx-background-color: #353535;
+}
+
+.list-view .list-cell:even {
+    -fx-background-color: #313131;
+}
+
+.list-view .list-cell:focused{
+    -fx-background-color: linear-gradient(
+        /*from 0% 0% to 100% 0%, #333333 30%, #333333 0%, #3d008d 70%, #3d008d 0%*/
+        to right, #3d008d, #7000ff
+    );
 }
