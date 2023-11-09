@@ -1,38 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
 <AnchorPane fx:id="AnchorPane" prefHeight="600.0" prefWidth="1100.0" stylesheets="@page-two-style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.musicplayer.musicplayerv1.PageTwoController">
-    <style>
-        .background {
-        -fx-background-color: black;
-        }
-
-        .tab-pane {
-        -fx-background-color: blue;
-        }
-
-        .tab {
-        -fx-text-fill: #3498db; /* Set the text color for the Tab */
-        }
-
-        .list-view {
-        -fx-background-color: #f1c40f; /* Set the background color for the ListView */
-        }
-    </style>
-
     <children>
-        <TabPane prefHeight="600.0" prefWidth="1100.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <Tab styleClass="tab" text="Songs">
-                <ListView fx:id="listView">
+        <TabPane pickOnBounds="false" prefHeight="600.0" prefWidth="1100.0" side="LEFT" stylesheets="@page-two-style.css" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Tab id="songs" closable="false" styleClass="tab" text=" SONGS ">
+                <ListView fx:id="listView" maxHeight="1.7976931348623157E308" maxWidth="1.1976931348623157E308">
 
                 </ListView>
             </Tab>
-            <Tab styleClass="tab" text="Music Player">
+            <Tab text=" MUSIC PLAYER ">
                 <VBox fx:id="MediaPlayer" alignment="CENTER" spacing="30.0">
                     <ImageView />
                     <Label fx:id="songTitle" alignment="CENTER" prefHeight="58.0" prefWidth="757.0" text="Song Title" wrapText="true">
@@ -40,7 +23,7 @@
                             <Font size="40.0" />
                         </font>
                     </Label>
-                    <Slider fx:id="songProgressBar" maxHeight="50.0" maxWidth="700.0" prefHeight="41.0" prefWidth="700.0" showTickMarks="true">
+                    <Slider fx:id="songProgressBar" maxHeight="50.0" maxWidth="700.0" prefHeight="41.0" prefWidth="700.0">
                         <padding>
                             <Insets left="10.0" right="10.0" />
                         </padding>
@@ -54,6 +37,9 @@
                     </HBox>
                 </VBox>
             </Tab>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
         </TabPane>
     </children>
 </AnchorPane>

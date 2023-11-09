@@ -1,19 +1,53 @@
 #MediaPlayer{
-    -fx-background-color: #333333;
+    -fx-background-color: #353535;
 }
 
 #MediaPlayer .label{
     -fx-text-fill: white;
 }
 
-.tab-pane .tab-header-background{
-    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #333333 30%, #333333 0%, #3d008d 70%, #3d008d 0%);
+.tab-pane .tab-header-background {
+    -fx-background-color: #353535;
+    -fx-text-fill: white;
 }
 
-.tab-pane .tab{
-    -fx-background-color: #ffef53;
+.tab-pane .tab {
+    -fx-background-color:#353535 ;
 }
 
-.tab .list-view .list-cell{
-    -fx-background-color: black;
+.tab-pane .tab .tab-label {
+    -fx-text-fill: white;
+
 }
+
+#listView {
+    -fx-background-color: orange;
+}
+
+.list-view .list-cell {
+    -fx-text-fill: white;
+    -fx-padding: 25px;
+    -fx-border-width: 3px;
+    -fx-font-size: 20px;
+}
+
+.list-view .list-cell:odd {
+    -fx-background-color: #353535;
+}
+
+.list-view .list-cell:even {
+    -fx-background-color: #313131;
+}
+
+.list-view .list-cell:focused {
+    -fx-text-fill: orange;
+    /* Adjust the font size as needed */
+}
+
+
+.list-view .list-cell:hover {
+    -fx-background-color: linear-gradient(
+    to right, #604300, orange
+    );
+}
+

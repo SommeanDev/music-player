@@ -3,6 +3,7 @@
 <?import java.lang.*?>
 <?import javafx.geometry.*?>
 <?import javafx.scene.control.*?>
+<?import javafx.scene.effect.*?>
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.shape.*?>
 <?import javafx.scene.text.*?>
@@ -14,8 +15,11 @@
             <Font name="System Bold" size="31.0" />
          </font>
       </Button>
-      <Circle fill="#21ffde" layoutX="550.0" layoutY="300.0" radius="100.0" stroke="WHITE" strokeType="INSIDE" />
-      <Polygon fill="WHITE" layoutX="566.0" layoutY="310.0" rotate="90.0" stroke="WHITE" strokeType="INSIDE">
+      <Circle fill="#ff9d00" layoutX="550.0" layoutY="300.0" radius="100.0" stroke="WHITE" strokeType="INSIDE" strokeWidth="5.0">
+         <effect>
+            <InnerShadow />
+         </effect></Circle>
+      <Polygon fill="WHITE" layoutX="566.0" layoutY="310.0" rotate="90.0" stroke="WHITE" strokeDashOffset="5.0" strokeLineCap="ROUND" strokeLineJoin="BEVEL" strokeType="INSIDE">
         <points>
           <Double fx:value="-50.0" />
           <Double fx:value="40.0" />
@@ -27,7 +31,13 @@
          <rotationAxis>
             <Point3D z="90.0" />
          </rotationAxis>
+         <effect>
+            <Bloom />
+         </effect>
       </Polygon>
       <Accordion layoutX="129.0" layoutY="99.0" />
    </children>
+   <effect>
+      <Glow />
+   </effect>
 </AnchorPane>
