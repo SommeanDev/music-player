@@ -1,7 +1,15 @@
 #AnchorPane{
-    -fx-background-color: black;
+    -fx-background-color: #222222;
 }
 
-.AnchorPane{
+#StartButton{
     -fx-background-color: blue;
+    -fx-text-fill: white;
+    -fx-background-radius: 10%;
+}
+
+#StartButton:hover{
+    -fx-border-color: blue;
+    -fx-background-color: #222222;
+    -fx-border-radius: 10%;
 }
