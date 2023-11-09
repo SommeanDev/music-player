@@ -44,3 +44,10 @@
     /* Adjust the font size as needed */
 }
 
+
+.list-view .list-cell:hover {
+    -fx-background-color: linear-gradient(
+    to right, #604300, orange
+    );
+}
+
