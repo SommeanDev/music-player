@@ -18,6 +18,7 @@ public class HelloController {
             PageTwoController pageTwoController = loader.getController();
             // Create a new scene and set it on the stage
             Scene newScene = new Scene(root, 1100, 600);
+            newScene.getStylesheets().add(getClass().getResource("page-two-style.css").toExternalForm());
             Stage stage = (Stage) ((Node) event.getSource()).getScene().getWindow();
             stage.setScene(newScene);
         } catch (Exception e) {

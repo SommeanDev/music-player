@@ -110,7 +110,8 @@ public class PageTwoController implements Initializable {
                 }
             }
         }
-
+        listView.setStyle("-fx-background-color: black;");
+        System.out.println(listView.getStyle());
 //        for (String listItem : listView.getItems().stream().toList()) {
 //            String[] listItemContents = listItem.split("\t");
 //            System.out.println(listItemContents[1]);
