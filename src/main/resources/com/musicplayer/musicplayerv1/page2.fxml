@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <?import javafx.geometry.*?>
+<?import javafx.scene.*?>
 <?import javafx.scene.control.*?>
 <?import javafx.scene.image.*?>
 <?import javafx.scene.layout.*?>
@@ -8,13 +9,13 @@
 
 <AnchorPane fx:id="AnchorPane" prefHeight="600.0" prefWidth="1100.0" stylesheets="@page-two-style.css" xmlns="http://javafx.com/javafx/17.0.2-ea" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.musicplayer.musicplayerv1.PageTwoController">
     <children>
-        <TabPane prefHeight="600.0" prefWidth="1100.0" side="LEFT" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-            <Tab styleClass="tab" text="Songs">
-                <ListView fx:id="listView">
+        <TabPane pickOnBounds="false" prefHeight="600.0" prefWidth="1100.0" side="LEFT" stylesheets="@page-two-style.css" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+            <Tab id="songs" closable="false" styleClass="tab" text=" SONGS ">
+                <ListView fx:id="listView" maxHeight="1.7976931348623157E308" maxWidth="1.1976931348623157E308">
 
                 </ListView>
             </Tab>
-            <Tab text="Music Player">
+            <Tab text=" MUSIC PLAYER ">
                 <VBox fx:id="MediaPlayer" alignment="CENTER" spacing="30.0">
                     <ImageView />
                     <Label fx:id="songTitle" alignment="CENTER" prefHeight="58.0" prefWidth="757.0" text="Song Title" wrapText="true">
@@ -36,6 +37,9 @@
                     </HBox>
                 </VBox>
             </Tab>
+         <cursor>
+            <Cursor fx:constant="HAND" />
+         </cursor>
         </TabPane>
     </children>
 </AnchorPane>
