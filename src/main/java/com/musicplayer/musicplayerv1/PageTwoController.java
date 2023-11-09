@@ -1,32 +1,45 @@
 package com.musicplayer.musicplayerv1;
 
+import javafx.animation.KeyFrame;
+import javafx.animation.Timeline;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.ListView;
-import javafx.scene.layout.AnchorPane;
-import javafx.stage.Stage;
+import javafx.scene.control.*;
+import javafx.scene.control.Button;
+import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
+import javafx.util.Duration;
 
-
-
+import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.ResourceBundle;
+import java.util.Scanner;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import javafx.event.EventHandler;
-import javafx.scene.input.MouseEvent;
-import java.awt.Desktop;
 
 public class PageTwoController implements Initializable {
     @FXML
     public ListView<String> listView;
     public ArrayList<String> songList = new ArrayList<>();
+    private static int playPauseCount = 0;
+
+    public MediaPlayer mediaPlayer;
+    public Label songTitle;
+    public Slider songProgressBar;
+    public Button playButton;
+
+    private Timeline progressBarUpdateTimeLine;
+    private double userPlayBackValue = 0.0;
 
     protected void findMusicMP3(){
-        String command = "ls music/*.mp3";
+        String command = "ls music/*.mp3, music/*.wav, music/*.mp4";
         StringBuilder stringbuilder = new StringBuilder();
         ProcessBuilder processBuilder = new ProcessBuilder("powershell.exe", "-Command", command).directory(new File("C:\\Users\\HP"));
         try{
@@ -37,7 +50,6 @@ public class PageTwoController implements Initializable {
             Scanner scanner = new Scanner(is);
 
             while (scanner.hasNextLine()){
-
                 String line = scanner.nextLine();
                 stringbuilder.append(line);
                 songList.add(line);
@@ -46,6 +58,8 @@ public class PageTwoController implements Initializable {
             String out = stringbuilder.toString();
 
             for (String song : songList) {
+                System.out.println(song);
+
                 if (songList.indexOf(song) >= 7 || songList.indexOf(song) == 5) {
 
                     String pattern = "^([-a]+)\\s+(\\d{2}-\\d{2}-\\d{4})\\s+(\\d{2}:\\d{2})\\s+(\\d+)\\s+(.*)$";
@@ -67,7 +81,6 @@ public class PageTwoController implements Initializable {
                         System.out.println("Name: " + name);
                     }
                 }
-
             }
 
             System.out.println("\nLine count: " + lineCount);
@@ -97,33 +110,105 @@ public class PageTwoController implements Initializable {
                 }
             }
         }
+        listView.setStyle("-fx-background-color: black;");
+        System.out.println(listView.getStyle());
+//        for (String listItem : listView.getItems().stream().toList()) {
+//            String[] listItemContents = listItem.split("\t");
+//            System.out.println(listItemContents[1]);
+//        }
 
-        listView.setOnMouseClicked(new EventHandler<MouseEvent>() {
-            @Override
-            public void handle(MouseEvent event) {
-                int selectedIndex = listView.getSelectionModel().getSelectedIndex();
-                if (selectedIndex >= 0) {
-                    String selectedSong = songList.get(selectedIndex);
-                    playSong(selectedSong);
+        listView.setOnMouseClicked(event -> {
+            int selectedIndex = listView.getSelectionModel().getSelectedIndex();
+            if (selectedIndex >= 0) {
+                String selectedSong = songList.get(selectedIndex+8);
+                if (songList.indexOf(selectedSong) >= 7 || songList.indexOf(selectedSong) == 5) {
+
+                    String pattern = "^([-a]+)\\s+(\\d{2}-\\d{2}-\\d{4})\\s+(\\d{2}:\\d{2})\\s+(\\d+)\\s+(.*)$";
+
+                    Pattern r = Pattern.compile(pattern);
+                    Matcher m = r.matcher(selectedSong);
+
+                    if (m.find()) {
+                        String selectedSongName = m.group(5);
+                        System.out.println(selectedSongName);
+                        findAndPlaySong(selectedSongName);
+                    }
                 }
             }
         });
     }
-    private void playSong(String songFile) {
+    private void findAndPlaySong(String songFile) {
         try {
-            File file = new File(songFile);
+            File file = new File("C:\\Users\\HP\\music\\" + songFile);
             if (file.exists()) {
-                Desktop.getDesktop().open(file);
+                Media media = new Media(file.toURI().toString());
+                mediaPlayer = new MediaPlayer(media);
+                mediaPlayer.setOnReady(() -> {
+                    songTitle.setText(file.getName());
+                });
+                MediaView mediaView = new MediaView(mediaPlayer);
+//                Desktop.getDesktop().open(file);
+
+                progressBarUpdateTimeLine = new Timeline(
+                        new KeyFrame(
+                                Duration.seconds(1),
+                                event -> {
+                                    if (mediaPlayer != null && mediaPlayer.getStatus() == MediaPlayer.Status.PLAYING) {
+                                        double totalSongDuration = mediaPlayer.getTotalDuration().toMillis();
+                                        songProgressBar.setMax(totalSongDuration);
+                                        songProgressBar.setValue(mediaPlayer.getCurrentTime().toMillis());
+                                    }
+                                }
+                        )
+                );
+
+                progressBarUpdateTimeLine.setCycleCount(Timeline.INDEFINITE);
+                mediaPlayer.currentTimeProperty().addListener(((observable, oldValue, newValue) -> {
+                    songProgressBar.setMax(mediaPlayer.getTotalDuration().toMillis());
+                    songProgressBar.setValue(newValue.toMillis());
+                }));
+
+                songProgressBar.valueProperty().addListener(((observable, oldValue, newValue) -> {
+                    userPlayBackValue = newValue.doubleValue();
+                    if (Math.abs(newValue.doubleValue() - oldValue.doubleValue()) > 300) {
+                        mediaPlayer.seek(Duration.millis(userPlayBackValue));
+                    }
+                    System.out.println("Observable value: " + observable.getValue().doubleValue() + "\tOld value: " +  oldValue.doubleValue() + "\tNew value: " + newValue.doubleValue());
+                }));
             } else {
                 System.err.println("File does not exist: " + songFile);
             }
-        } catch (IOException e) {
-            System.err.println("Error while opening the file: " + e.getMessage());
-            e.printStackTrace();
-        } catch (SecurityException e) {
-            System.err.println("Security exception: " + e.getMessage());
+        } catch (Exception e) {
             e.printStackTrace();
         }
+    }
+
+    //TODO: FXML PART
+    @FXML
+    public void previousSong(MouseEvent mouseEvent) {
+
+    }
+
+    @FXML
+    public void playSong(MouseEvent mouseEvent) {
+        if (playPauseCount == 0) {
+//            if (userPlayBackValue != 0.0) {
+//                System.out.println(userPlayBackValue);
+//                mediaPlayer.seek(Duration.seconds(userPlayBackValue));
+//                userPlayBackValue = 0.0;
+//            }
+            mediaPlayer.play();
+            playButton.setText("Pause");
+            playPauseCount++;
+        } else {
+            playButton.setText("Play");
+            mediaPlayer.pause();
+            playPauseCount = 0;
+        }
+    }
+
+    @FXML
+    public void NextSong(MouseEvent mouseEvent) {
     }
 
 }

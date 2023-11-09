@@ -1,0 +1,19 @@
+#MediaPlayer{
+    -fx-background-color: #333333;
+}
+
+#MediaPlayer .label{
+    -fx-text-fill: white;
+}
+
+.tab-pane .tab-header-background{
+    -fx-background-color: linear-gradient(from 0% 0% to 100% 0%, #333333 30%, #333333 0%, #3d008d 70%, #3d008d 0%);
+}
+
+.tab-pane .tab{
+    -fx-background-color: #ffef53;
+}
+
+.tab .list-view .list-cell{
+    -fx-background-color: black;
+}
