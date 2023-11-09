@@ -1,6 +1,7 @@
 module com.musicplayer.musicplayerv1 {
     requires javafx.controls;
     requires javafx.fxml;
+    requires javafx.media;
 
     requires org.controlsfx.controls;
     requires org.kordamp.ikonli.javafx;
