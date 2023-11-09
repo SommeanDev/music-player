@@ -20,27 +20,16 @@
 
 }
 
-
-
-
-
-
-
-
 #listView {
     -fx-background-color: orange;
 }
 
-
 .list-view .list-cell {
     -fx-text-fill: white;
     -fx-padding: 25px;
-
     -fx-border-width: 3px;
-     -fx-font-size: 20px;
-
+    -fx-font-size: 20px;
 }
-
 
 .list-view .list-cell:odd {
     -fx-background-color: #353535;

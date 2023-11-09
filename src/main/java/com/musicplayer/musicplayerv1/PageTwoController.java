@@ -110,6 +110,9 @@ public class PageTwoController implements Initializable {
                 }
             }
         }
+
+        findAndPlaySong(listView.getItems().get(0).split("\t")[1], false);
+
         listView.setStyle("-fx-background-color: black;");
         System.out.println(listView.getStyle());
 //        for (String listItem : listView.getItems().stream().toList()) {
@@ -119,6 +122,11 @@ public class PageTwoController implements Initializable {
 
         listView.setOnMouseClicked(event -> {
             int selectedIndex = listView.getSelectionModel().getSelectedIndex();
+            if (mediaPlayer != null) {
+                mediaPlayer.stop();
+                playPauseCount = 0;
+                playButton.setText("Play");
+            }
             if (selectedIndex >= 0) {
                 String selectedSong = songList.get(selectedIndex+8);
                 if (songList.indexOf(selectedSong) >= 7 || songList.indexOf(selectedSong) == 5) {
@@ -131,15 +139,15 @@ public class PageTwoController implements Initializable {
                     if (m.find()) {
                         String selectedSongName = m.group(5);
                         System.out.println(selectedSongName);
-                        findAndPlaySong(selectedSongName);
+                        findAndPlaySong(selectedSongName, true);
                     }
                 }
             }
         });
     }
-    private void findAndPlaySong(String songFile) {
+    private void findAndPlaySong(String songName, boolean playSong) {
         try {
-            File file = new File("C:\\Users\\HP\\music\\" + songFile);
+            File file = new File("C:\\Users\\HP\\music\\" + songName);
             if (file.exists()) {
                 Media media = new Media(file.toURI().toString());
                 mediaPlayer = new MediaPlayer(media);
@@ -148,6 +156,12 @@ public class PageTwoController implements Initializable {
                 });
                 MediaView mediaView = new MediaView(mediaPlayer);
 //                Desktop.getDesktop().open(file);
+
+                if (playSong) {
+                    mediaPlayer.play();
+                    playButton.setText("Pause");
+                    playPauseCount++;
+                }
 
                 progressBarUpdateTimeLine = new Timeline(
                         new KeyFrame(
@@ -176,7 +190,7 @@ public class PageTwoController implements Initializable {
                     System.out.println("Observable value: " + observable.getValue().doubleValue() + "\tOld value: " +  oldValue.doubleValue() + "\tNew value: " + newValue.doubleValue());
                 }));
             } else {
-                System.err.println("File does not exist: " + songFile);
+                System.err.println("File does not exist: " + songName);
             }
         } catch (Exception e) {
             e.printStackTrace();
