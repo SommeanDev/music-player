@@ -30,9 +30,18 @@
                     </Slider>
                     <HBox alignment="CENTER" spacing="20.0">
                         <children>
-                            <Button fx:id="previousButton" mnemonicParsing="false" onMouseClicked="#previousSong" text="Previous" />
-                            <Button fx:id="playButton" defaultButton="true" layoutX="534.0" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#playSong" text="Play" />
-                            <Button fx:id="nextButton" layoutX="508.0" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#NextSong" text="Next" />
+                            <Button fx:id="previousButton" mnemonicParsing="false" onMouseClicked="#previousSong" text="&lt;&lt;" textAlignment="CENTER">
+                        <font>
+                           <Font name="JetBrains Mono ExtraBold" size="24.0" />
+                        </font></Button>
+                            <Button fx:id="playButton" alignment="CENTER" contentDisplay="CENTER" defaultButton="true" layoutX="534.0" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#playSong" text="▶" textAlignment="CENTER">
+                        <font>
+                           <Font name="Times New Roman" size="28.0" />
+                        </font></Button>
+                            <Button fx:id="nextButton" layoutX="508.0" layoutY="10.0" mnemonicParsing="false" onMouseClicked="#NextSong" text="&gt;&gt;">
+                        <font>
+                           <Font name="JetBrains Mono ExtraBold Italic" size="24.0" />
+                        </font></Button>
                         </children>
                     </HBox>
                 </VBox>
