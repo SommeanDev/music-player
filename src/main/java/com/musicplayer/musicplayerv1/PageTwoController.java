@@ -18,16 +18,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PageTwoController implements Initializable {
     @FXML
     public ListView<String> listView;
-    public ArrayList<String> songList = new ArrayList<>();
+    public ArrayList<String> songList = new ArrayList<>(), songNameList = new ArrayList<>();
     private static int playPauseCount = 0;
 
     public MediaPlayer mediaPlayer;
@@ -37,6 +35,7 @@ public class PageTwoController implements Initializable {
 
     private Timeline progressBarUpdateTimeLine;
     private double userPlayBackValue = 0.0;
+    private Map<Media, String> mediaNameMap;
 
     protected void findMusicMP3(){
         String command = "ls music/*.mp3, music/*.wav, music/*.mp4";
@@ -73,7 +72,7 @@ public class PageTwoController implements Initializable {
                         String time = m.group(3);
                         String length = m.group(4);
                         String name = m.group(5);
-
+                        songNameList.add(name);
                         System.out.println("Mode: " + mode);
                         System.out.println("LastWriteTime: " + lastWriteTime);
                         System.out.println("Time: " + time);
@@ -95,20 +94,11 @@ public class PageTwoController implements Initializable {
         findMusicMP3();
 //        listView.getItems().addAll("song1", "song2", "song3", "song4");
         int listIndex = 1;
-        for (String song : songList) {
-            if (songList.indexOf(song) >= 7 && !song.equals(songList.get(1))) {
-                String pattern = "^([-a]+)\\s+(\\d{2}-\\d{2}-\\d{4})\\s+(\\d{2}:\\d{2})\\s+(\\d+)\\s+(.*)$";
-
-                Pattern r = Pattern.compile(pattern);
-                Matcher m = r.matcher(song);
-
-                if (m.find()) {
-                    String name = m.group(5);
-                    String listItem = listIndex + "\t" +  name;
-                    listView.getItems().add(listItem);
-                    listIndex++;
-                }
-            }
+        mediaNameMap = new HashMap<>();
+        for (String song : songNameList) {
+            String listItem = listIndex + "\t" + song;
+            listView.getItems().add(listItem);
+            listIndex++;
         }
 
         findAndPlaySong(listView.getItems().get(0).split("\t")[1], false);
@@ -128,20 +118,8 @@ public class PageTwoController implements Initializable {
                 playButton.setText("Play");
             }
             if (selectedIndex >= 0) {
-                String selectedSong = songList.get(selectedIndex+8);
-                if (songList.indexOf(selectedSong) >= 7 || songList.indexOf(selectedSong) == 5) {
-
-                    String pattern = "^([-a]+)\\s+(\\d{2}-\\d{2}-\\d{4})\\s+(\\d{2}:\\d{2})\\s+(\\d+)\\s+(.*)$";
-
-                    Pattern r = Pattern.compile(pattern);
-                    Matcher m = r.matcher(selectedSong);
-
-                    if (m.find()) {
-                        String selectedSongName = m.group(5);
-                        System.out.println(selectedSongName);
-                        findAndPlaySong(selectedSongName, true);
-                    }
-                }
+                String selectedSong = songNameList.get(selectedIndex);
+                findAndPlaySong(selectedSong, true);
             }
         });
     }
@@ -157,6 +135,7 @@ public class PageTwoController implements Initializable {
                 MediaView mediaView = new MediaView(mediaPlayer);
 //                Desktop.getDesktop().open(file);
 
+                mediaNameMap.put(media, songName);
                 if (playSong) {
                     mediaPlayer.play();
                     playButton.setText("Pause");
@@ -223,6 +202,9 @@ public class PageTwoController implements Initializable {
 
     @FXML
     public void NextSong(MouseEvent mouseEvent) {
+        PlayListNavigationController controller = new PlayListNavigationController(mediaPlayer);
+        controller.updateStack(songNameList);
+        controller.NextSong(mediaNameMap.get(mediaPlayer.getMedia()));
     }
 
 }
