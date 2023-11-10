@@ -116,7 +116,7 @@ public class PageTwoController implements Initializable {
             if (mediaPlayer != null) {
                 mediaPlayer.stop();
                 playPauseCount = 0;
-                playButton.setText("Play");
+                playButton.setText("▶");
             }
             if (selectedIndex >= 0) {
                 String selectedSong = songNameList.get(selectedIndex);
@@ -158,7 +158,7 @@ public class PageTwoController implements Initializable {
                 mediaNameMap.put(media, songName);
                 if (autoPlay) {
                     mediaPlayer.play();
-                    playButton.setText("Pause");
+                    playButton.setText("⏸");
                     playPauseCount++;
                 }
 
@@ -193,7 +193,7 @@ public class PageTwoController implements Initializable {
 //                System.err.println("File does not exist: " + songName);
                 mediaPlayer.stop();
                 playPauseCount = 0;
-                playButton.setText("Play");
+                playButton.setText("▶");
                 Alert alert = new Alert(Alert.AlertType.INFORMATION);
                 alert.setTitle("I think there's a problem. Details below");
                 alert.setHeaderText("Playlist Over");
@@ -220,10 +220,10 @@ public class PageTwoController implements Initializable {
 //                userPlayBackValue = 0.0;
 //            }
             mediaPlayer.play();
-            playButton.setText("Pause");
+            playButton.setText("⏸");
             playPauseCount++;
         } else {
-            playButton.setText("Play");
+            playButton.setText("▶");
             mediaPlayer.pause();
             playPauseCount = 0;
         }
