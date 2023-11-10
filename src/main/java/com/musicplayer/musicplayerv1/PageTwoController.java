@@ -36,6 +36,7 @@ public class PageTwoController implements Initializable {
     private Timeline progressBarUpdateTimeLine;
     private double userPlayBackValue = 0.0;
     private Map<Media, String> mediaNameMap;
+    PlayListNavigationController controller = new PlayListNavigationController(mediaPlayer);
 
     protected void findMusicMP3(){
         String command = "ls music/*.mp3, music/*.wav, music/*.mp4";
@@ -122,21 +123,40 @@ public class PageTwoController implements Initializable {
                 findAndPlaySong(selectedSong, true);
             }
         });
+
+        controller.updatePlayList(songNameList);
     }
-    private void findAndPlaySong(String songName, boolean playSong) {
+    private void findAndPlaySong(String songName, boolean autoPlay) {
         try {
             File file = new File("C:\\Users\\HP\\music\\" + songName);
             if (file.exists()) {
                 Media media = new Media(file.toURI().toString());
-                mediaPlayer = new MediaPlayer(media);
-                mediaPlayer.setOnReady(() -> {
-                    songTitle.setText(file.getName());
-                });
+
+                if (mediaPlayer == null) {
+                    mediaPlayer = new MediaPlayer(media);
+
+                    mediaPlayer.setOnEndOfMedia(() -> {
+                        System.out.println("called NextSong()");
+                        NextSong();
+                    });
+                } else {
+                    mediaPlayer.stop();
+                    mediaPlayer = new MediaPlayer(media);
+
+                    mediaPlayer.setOnEndOfMedia(() -> {
+                        System.out.println("called NextSong()");
+                        NextSong();
+                    });
+                }
                 MediaView mediaView = new MediaView(mediaPlayer);
 //                Desktop.getDesktop().open(file);
 
+                mediaPlayer.setOnReady(() -> {
+                    songTitle.setText(file.getName());
+                });
+
                 mediaNameMap.put(media, songName);
-                if (playSong) {
+                if (autoPlay) {
                     mediaPlayer.play();
                     playButton.setText("Pause");
                     playPauseCount++;
@@ -168,8 +188,16 @@ public class PageTwoController implements Initializable {
                     }
                     System.out.println("Observable value: " + observable.getValue().doubleValue() + "\tOld value: " +  oldValue.doubleValue() + "\tNew value: " + newValue.doubleValue());
                 }));
+
             } else {
-                System.err.println("File does not exist: " + songName);
+//                System.err.println("File does not exist: " + songName);
+                mediaPlayer.stop();
+                playPauseCount = 0;
+                playButton.setText("Play");
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("I think there's a problem. Details below");
+                alert.setHeaderText("Playlist Over");
+                alert.showAndWait();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -179,7 +207,8 @@ public class PageTwoController implements Initializable {
     //TODO: FXML PART
     @FXML
     public void previousSong(MouseEvent mouseEvent) {
-
+        PlayListNavigationController controller = new PlayListNavigationController(mediaPlayer);
+        findAndPlaySong(controller.previousSongInPlayList(mediaNameMap.get(mediaPlayer.getMedia())), true);
     }
 
     @FXML
@@ -203,8 +232,13 @@ public class PageTwoController implements Initializable {
     @FXML
     public void NextSong(MouseEvent mouseEvent) {
         PlayListNavigationController controller = new PlayListNavigationController(mediaPlayer);
-        controller.updateStack(songNameList);
-        controller.NextSong(mediaNameMap.get(mediaPlayer.getMedia()));
+        findAndPlaySong(controller.nextSongInPlayList(mediaNameMap.get(mediaPlayer.getMedia())), true);
+//        System.out.println(controller.nextSongInPlayList(mediaNameMap.get(mediaPlayer.getMedia())));
     }
 
+    public void NextSong() {
+        PlayListNavigationController controller = new PlayListNavigationController(mediaPlayer);
+        findAndPlaySong(controller.nextSongInPlayList(mediaNameMap.get(mediaPlayer.getMedia())), true);
+//        System.out.println(controller.nextSongInPlayList(mediaNameMap.get(mediaPlayer.getMedia())));
+    }
 }

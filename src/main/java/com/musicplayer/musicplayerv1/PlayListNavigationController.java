@@ -2,39 +2,60 @@ package com.musicplayer.musicplayerv1;
 
 import javafx.scene.media.MediaPlayer;
 
-import java.util.ArrayList;
-import java.util.Queue;
-import java.util.Stack;
+import java.util.*;
 
 public class PlayListNavigationController {
-    public static Stack<String> playlist = new Stack<>();
+    public static LinkedList<String> playlist = new LinkedList<>();
     private MediaPlayer mediaPlayer;
 
     PlayListNavigationController(MediaPlayer mediaPlayer) {
         this.mediaPlayer = mediaPlayer;
     }
 
-    public void updateStack(ArrayList<String> songNameList) {
-        for (String song : songNameList.reversed()) {
-            playlist.push(song);
+    public void updatePlayList(ArrayList<String> songName) {
+        for (String song : songName) {
+            playlist.add(song);
         }
-        System.out.println(playlist.peek());
     }
 
-    public void updateStack(String songName) {
-        System.out.println(playlist.peek());
+//    public String nextSongInPlayList(String currentSongName) {
+//        ListIterator<String> litr = playlist.listIterator();
+//        while (litr.hasNext()) {
+////            (currentSongName.equals(litr.next())) ? return litr.next() : return "Playlist over";
+//            if (currentSongName.equals(litr.next())) return litr.next();
+//        }
+//        return null;
+//    }
+
+    public String nextSongInPlayList(String currentSongName) {
+        ListIterator<String> litr = playlist.listIterator();
+        while (litr.hasNext()) {
+            String nextSong = litr.next();
+            if (currentSongName.equals(nextSong)) {
+                if (litr.hasNext()) {
+                    return litr.next();
+                } else {
+                    return "Playlist over";
+                }
+            }
+        }
+        return null; // Handle the case when the current song is not found in the playlist
     }
 
-    public void NextSong(String songName) {
-        //Song Name List example:
-        // [
-        //      Imagine Dragons - Believer.mp3                                       ,
-        //      Jaden, Kid Cudi - On My Own.mp3                                      ,
-        //      K'NAAN - Wavin' Flag.mp3             (+)                             ,
-        //      OneRepublic - I Ain't Worried.mp3                                    ,
-        //      file_example_WAV_1MG.wav                                             ,
-        //      Spider_Man_No_Way_Home_2021_English_Full_Movie_HDRip.mp4
-        // ]
-        System.out.println(songName);
+    public String previousSongInPlayList(String currentSongName) {
+        ListIterator<String> litr = playlist.listIterator();
+        while (litr.hasNext()) {
+            String nextSong = litr.next();
+            if (currentSongName.equals(nextSong)) {
+                if (litr.hasPrevious()) {
+                    System.out.println(litr.previous());
+                    return litr.previous();
+                } else {
+                    System.out.println(litr.previous());
+                    return "Playlist over";
+                }
+            }
+        }
+        return null; // Handle the case when the current song is not found in the playlist
     }
 }
