@@ -132,7 +132,7 @@ public class PageTwoController implements Initializable {
     }
     private void findAndPlaySong(String songName, boolean autoPlay) {
         try {
-            File file = new File("C:\\Users\\HP\\music\\" + songName);
+            File file = new File("C:\\Users\\*\\music\\" + songName);
             if (file.exists()) {
                 Media media = new Media(file.toURI().toString());
 
