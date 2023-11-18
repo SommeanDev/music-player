@@ -39,9 +39,11 @@ public class PageTwoController implements Initializable {
     PlayListNavigationController controller = new PlayListNavigationController(mediaPlayer);
 
     protected void findMusicMP3(){
-        String command = "ls music/*.mp3, music/*.wav, music/*.mp4";
+        String command = "ls */music/*.mp3";
+        String userHome = System.getProperty("user.home");
+        System.out.println(userHome + "\\");
         StringBuilder stringbuilder = new StringBuilder();
-        ProcessBuilder processBuilder = new ProcessBuilder("powershell.exe", "-Command", command).directory(new File("C:\\Users\\HP"));
+        ProcessBuilder processBuilder = new ProcessBuilder("powershell.exe", "-Command", command).directory(new File("/Users"));
         try{
             int lineCount = 0;
             Process process = processBuilder.start();
@@ -56,7 +58,8 @@ public class PageTwoController implements Initializable {
                 lineCount++;
             }
             String out = stringbuilder.toString();
-
+            System.out.println(out);
+            System.out.println(songList);
             for (String song : songList) {
                 System.out.println(song);
 
@@ -88,6 +91,7 @@ public class PageTwoController implements Initializable {
             e.printStackTrace();
         }
         System.out.println(System.getProperty("user.dir"));
+        System.out.println(processBuilder.directory());
     }
 
     @Override
