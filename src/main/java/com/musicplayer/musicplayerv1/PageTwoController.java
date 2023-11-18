@@ -39,9 +39,9 @@ public class PageTwoController implements Initializable {
     PlayListNavigationController controller = new PlayListNavigationController(mediaPlayer);
 
     protected void findMusicMP3(){
-        String command = "ls music/*.mp3, music/*.wav, music/*.mp4";
+        String command = "ls */music/*.mp3, */music/*.wav, */music/*.mp4";
         StringBuilder stringbuilder = new StringBuilder();
-        ProcessBuilder processBuilder = new ProcessBuilder("powershell.exe", "-Command", command).directory(new File("C:\\Users\\HP"));
+        ProcessBuilder processBuilder = new ProcessBuilder("powershell.exe", "-Command", command).directory(new File("/Users"));
         try{
             int lineCount = 0;
             Process process = processBuilder.start();
