@@ -18,16 +18,14 @@ import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.ResourceBundle;
-import java.util.Scanner;
+import java.util.*;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 public class PageTwoController implements Initializable {
     @FXML
     public ListView<String> listView;
-    public ArrayList<String> songList = new ArrayList<>();
+    public ArrayList<String> songList = new ArrayList<>(), songNameList = new ArrayList<>();
     private static int playPauseCount = 0;
 
     public MediaPlayer mediaPlayer;
@@ -37,6 +35,8 @@ public class PageTwoController implements Initializable {
 
     private Timeline progressBarUpdateTimeLine;
     private double userPlayBackValue = 0.0;
+    private Map<Media, String> mediaNameMap;
+    PlayListNavigationController controller = new PlayListNavigationController(mediaPlayer);
 
     protected void findMusicMP3(){
         String command = "ls music/*.mp3, music/*.wav, music/*.mp4";
@@ -73,7 +73,7 @@ public class PageTwoController implements Initializable {
                         String time = m.group(3);
                         String length = m.group(4);
                         String name = m.group(5);
-
+                        songNameList.add(name);
                         System.out.println("Mode: " + mode);
                         System.out.println("LastWriteTime: " + lastWriteTime);
                         System.out.println("Time: " + time);
@@ -95,20 +95,11 @@ public class PageTwoController implements Initializable {
         findMusicMP3();
 //        listView.getItems().addAll("song1", "song2", "song3", "song4");
         int listIndex = 1;
-        for (String song : songList) {
-            if (songList.indexOf(song) >= 7 && !song.equals(songList.get(1))) {
-                String pattern = "^([-a]+)\\s+(\\d{2}-\\d{2}-\\d{4})\\s+(\\d{2}:\\d{2})\\s+(\\d+)\\s+(.*)$";
-
-                Pattern r = Pattern.compile(pattern);
-                Matcher m = r.matcher(song);
-
-                if (m.find()) {
-                    String name = m.group(5);
-                    String listItem = listIndex + "\t" +  name;
-                    listView.getItems().add(listItem);
-                    listIndex++;
-                }
-            }
+        mediaNameMap = new HashMap<>();
+        for (String song : songNameList) {
+            String listItem = listIndex + "\t" + song;
+            listView.getItems().add(listItem);
+            listIndex++;
         }
 
         findAndPlaySong(listView.getItems().get(0).split("\t")[1], false);
@@ -125,41 +116,49 @@ public class PageTwoController implements Initializable {
             if (mediaPlayer != null) {
                 mediaPlayer.stop();
                 playPauseCount = 0;
-                playButton.setText("Play");
+                playButton.setText("▶");
             }
             if (selectedIndex >= 0) {
-                String selectedSong = songList.get(selectedIndex+8);
-                if (songList.indexOf(selectedSong) >= 7 || songList.indexOf(selectedSong) == 5) {
-
-                    String pattern = "^([-a]+)\\s+(\\d{2}-\\d{2}-\\d{4})\\s+(\\d{2}:\\d{2})\\s+(\\d+)\\s+(.*)$";
-
-                    Pattern r = Pattern.compile(pattern);
-                    Matcher m = r.matcher(selectedSong);
-
-                    if (m.find()) {
-                        String selectedSongName = m.group(5);
-                        System.out.println(selectedSongName);
-                        findAndPlaySong(selectedSongName, true);
-                    }
-                }
+                String selectedSong = songNameList.get(selectedIndex);
+                findAndPlaySong(selectedSong, true);
             }
         });
+
+        controller.updatePlayList(songNameList);
     }
-    private void findAndPlaySong(String songName, boolean playSong) {
+    private void findAndPlaySong(String songName, boolean autoPlay) {
         try {
             File file = new File("C:\\Users\\HP\\music\\" + songName);
             if (file.exists()) {
                 Media media = new Media(file.toURI().toString());
-                mediaPlayer = new MediaPlayer(media);
-                mediaPlayer.setOnReady(() -> {
-                    songTitle.setText(file.getName());
-                });
+
+                if (mediaPlayer == null) {
+                    mediaPlayer = new MediaPlayer(media);
+
+                    mediaPlayer.setOnEndOfMedia(() -> {
+                        System.out.println("called NextSong()");
+                        NextSong();
+                    });
+                } else {
+                    mediaPlayer.stop();
+                    mediaPlayer = new MediaPlayer(media);
+
+                    mediaPlayer.setOnEndOfMedia(() -> {
+                        System.out.println("called NextSong()");
+                        NextSong();
+                    });
+                }
                 MediaView mediaView = new MediaView(mediaPlayer);
 //                Desktop.getDesktop().open(file);
 
-                if (playSong) {
+                mediaPlayer.setOnReady(() -> {
+                    songTitle.setText(file.getName());
+                });
+
+                mediaNameMap.put(media, songName);
+                if (autoPlay) {
                     mediaPlayer.play();
-                    playButton.setText("Pause");
+                    playButton.setText("⏸");
                     playPauseCount++;
                 }
 
@@ -189,8 +188,16 @@ public class PageTwoController implements Initializable {
                     }
                     System.out.println("Observable value: " + observable.getValue().doubleValue() + "\tOld value: " +  oldValue.doubleValue() + "\tNew value: " + newValue.doubleValue());
                 }));
+
             } else {
-                System.err.println("File does not exist: " + songName);
+//                System.err.println("File does not exist: " + songName);
+                mediaPlayer.stop();
+                playPauseCount = 0;
+                playButton.setText("▶");
+                Alert alert = new Alert(Alert.AlertType.INFORMATION);
+                alert.setTitle("I think there's a problem. Details below");
+                alert.setHeaderText("Playlist Over");
+                alert.showAndWait();
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -200,7 +207,8 @@ public class PageTwoController implements Initializable {
     //TODO: FXML PART
     @FXML
     public void previousSong(MouseEvent mouseEvent) {
-
+        PlayListNavigationController controller = new PlayListNavigationController(mediaPlayer);
+        findAndPlaySong(controller.previousSongInPlayList(mediaNameMap.get(mediaPlayer.getMedia())), true);
     }
 
     @FXML
@@ -212,10 +220,10 @@ public class PageTwoController implements Initializable {
 //                userPlayBackValue = 0.0;
 //            }
             mediaPlayer.play();
-            playButton.setText("Pause");
+            playButton.setText("⏸");
             playPauseCount++;
         } else {
-            playButton.setText("Play");
+            playButton.setText("▶");
             mediaPlayer.pause();
             playPauseCount = 0;
         }
@@ -223,6 +231,14 @@ public class PageTwoController implements Initializable {
 
     @FXML
     public void NextSong(MouseEvent mouseEvent) {
+        PlayListNavigationController controller = new PlayListNavigationController(mediaPlayer);
+        findAndPlaySong(controller.nextSongInPlayList(mediaNameMap.get(mediaPlayer.getMedia())), true);
+//        System.out.println(controller.nextSongInPlayList(mediaNameMap.get(mediaPlayer.getMedia())));
     }
 
+    public void NextSong() {
+        PlayListNavigationController controller = new PlayListNavigationController(mediaPlayer);
+        findAndPlaySong(controller.nextSongInPlayList(mediaNameMap.get(mediaPlayer.getMedia())), true);
+//        System.out.println(controller.nextSongInPlayList(mediaNameMap.get(mediaPlayer.getMedia())));
+    }
 }
